@@ -111,7 +111,7 @@ BEGIN
 		now(),			-- creation_date
 		0,			-- creation_user
 		null,			-- creation_ip
-		null,			-- context_id
+		new__lead_id,		-- context_id
 		''t'',			-- security_inherit_p
 		null,			-- title
 		null			-- package_id 
@@ -124,24 +124,42 @@ BEGIN
 
 END;' language 'plpgsql';
 
-SELECT define_function_args ('cif_loan__delete', 'loan_id');
+SELECT define_function_args ('cif_loan__delete', 'loan_id, lead_id');
 
-CREATE OR REPLACE FUNCTION cif_loan__delete (integer)
+CREATE OR REPLACE FUNCTION cif_loan__delete (integer, integer)
 RETURNS integer AS '
 DECLARE
 	p_loan_id	ALIAS FOR $1;
-BEGIN
-	PERFORM acs_object__delete (p_loan_id);
-	
-	DELETE FROM cif_loans WHERE loan_id = p_loan_id;
+	p_lead_id	ALIAS FOR $2;
 
+	row		record;
+
+BEGIN
+
+	IF p_loan_id IS NOT NULL THEN
+	   PERFORM acs_object__delete (p_loan_id);
+
+	   DELETE FROM cif_loans WHERE loan_id = p_loan_id;
+
+	   RETURN 0;
+	END IF;
+	
+	FOR row IN 
+	    SELECT object_id FROM acs_objects WHERE context_id = p_lead_id
+	LOOP
+	   PERFORM acs_object__delete (row.object_id);
+	   
+	   DELETE FROM cif_loans WHERE loan_id = row.object_id;
+		
+	END LOOP;
+	
 	RETURN 0;
 END;' language 'plpgsql';
 
 
 
 
-
+-- Datamodel for Lead's contact info
 CREATE TABLE cif_lead_contacts (
 	contact_id	 	integer not null
 				CONSTRAINT cif_lead_contacts_contact_id_pk primary key,
@@ -152,7 +170,7 @@ CREATE TABLE cif_lead_contacts (
 	postal_address		varchar(1000),
 	number			varchar(10),
 	postal_code		varchar(50),
-	state_abbrev		varchar(2)
+	state_abbrev		char(2)
 				CONSTRAINT cif_lead_contacts_state_abbrev_fk foreing key (state_abbrev)
 				REFERENCES br_states (abbrev),
 	municipality		varchar(100) 
@@ -172,24 +190,70 @@ CREATE TABLE cif_lead_contacts (
 CREATE INDEX cif_lead_contacts_country_code_ix ON cif_lead_contacts_country(country_code);
 CREATE INDEX cif_lead_contacts_state_abbrev_ix ON cif_lead_contacts_state(state_abbrev);
 CREATE INDEX cif_lead_contacts_municipality_ix ON cif_lead_contacts_municipality(municipality);
-CREATE INDEX cif_lead_contacts_lead_ix ON cif_lead_contactslead_id);
+CREATE INDEX cif_lead_contacts_lead_id_ix ON cif_lead_contacts(lead_id);
 
-CREATE OR REPLACE FUNCTION cif_contact_info__new
-CREATE OR REPLACE FUNCTION cif_contact_info__del
+SELECT define_function_args ('cif_lead_contact__new', 'contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, phone1, phone_type1, phone2, phone_type2, additional_text');
+
+CREATE OR REPLACE FUNCTION cif_lead_contact__new (integer, integer, varchar, varchar, varchar, varchar, char, varchar, char, varchar, varchar, varchar, varchar, varchar)
+RETURNS integer AS '
+DECLARE
+	new__contact_id		ALIAS FOR $1;
+	new__lead_id		ALIAS FOR $2;
+	new__contact_time	ALIAS FOR $3;
+	new__postal_address	ALIAS FOR $4;
+	new__number		ALIAS FOR $5;
+	new__postal_code	ALIAS FOR $6;
+	new__state_abbrev	ALIAS FOR $7;
+	new__municipality	ALIAS FOR $8;
+	new__country_code	ALIAS FOR $9;
+	new__phone1		ALIAS FOR $10;
+	new__phone_type1	ALIAS FOR $11;
+	new__phone2		ALIAS FOR $12;
+	new__phone_type2	ALIAS FOR $13;
+	new__additional_text	ALIAS FOR $14;
+
+BEGIN
+
+	INSERTO INTO cif_lead_contacts (contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, phone1, phone_type1, phone2, phone_type2, additional_text) VALUES (new__contact_id, new__lead_id, new__contact_time, new__postal_address, new__number, new__postal_code, new__state_abbrev, new__municipality, new__country_code, new__phone1, new__phone_type1, new__phone2, new__phone_type2, new__additional_text);
+
+	RETURN 0;
+	
+END;' language 'plpgsql';
+
+SELECT define_function_args ('cif_lead_contact__delete', 'contact_id, lead_id');
+
+CREATE OR REPLACE FUNCTION cif_lead_contact__delete (integer, integer)
+RETURNS integer AS '
+DECLARE
+	p_contact_id	integer;	-- default null
+	p_lead_id	integer;	-- default null
+BEGIN
+	IF p_contact_id IS NULL THEN
+		DELETE FROM cif_lead_contacts WHERE contact_id = p_lead_id;
+]
+		RETURN 0;
+	END IF;
+
+	DELETE FROM cif_lead_contacts WHERE contact_id = p_contact_id;
+
+	RETURN 0;
+
+END;' language 'plpgsql';
+	
  
--- cif_lead_profile
+-- Datamodel for Leads 
 CREATE TABLE cif_leads (
 	lead_id		integer not null
 			CONSTRAINT cif_leads_lead_id_fk foreign key (lead_id)
 			REFERENCES acs_objects (object_id)
 			CONSTRAINT cif_leads_lead_id_pk primary key,
 	user_id		integer not null
-			CONSTRAINT leads_user_id_fk foreing key (user_id)
+			CONSTRAINT cif_leads_user_id_fk foreing key (user_id)
 			REFERENCES users (user_id),
 	cpf		varchar(20)
-			CONSTRAINT cif_lead_cpf_nn
+			CONSTRAINT cif_leads_cpf_nn
 			not null
-			CONSTRAINT cif_lead_cpf_un
+			CONSTRAINT cif_leads_cpf_un
 			unique,
 	gender		char,
 	montlhy_income	varchar(50),
@@ -198,6 +262,32 @@ CREATE TABLE cif_leads (
 );
 
 CREATE INDEX cif_leads_cpf_ix ON cif_leads(cpf);
+
+CREATE OR REPLACE FUNCTION inline_0 ()
+RETURNS integer AS '
+DECLARE 
+BEGIN
+	PERFORM acs_object_type__create_type (
+		''lead'',		-- object_type
+		''Lead'',		-- pretty_name
+		''Leads'',		-- pretty_plural
+		''acs_object'', 	-- supertype
+		''cif_leads'',		-- table_name
+		''lead_id'',		-- id_column
+		''leading-management,	-- package_name
+		''f'',			-- abstract_p
+		null,			-- type_extension_table
+		null			-- name_method
+	);
+
+	RETURN 0;
+
+END;' language 'plpgsql';
+
+SELECT inline_0 ();
+DROP FUNCTION inline_0 ();
+
+
 
 SELECT define_function_args ('cif_lead__new', 'lead_id, user_id, gender, cpf, montlhy_income, birth_date, marital_status');
 
@@ -231,8 +321,6 @@ BEGIN
 	INSERT INTO cif_leads (lead_id, user_id, cpf, gender, monthly_income, birth_date, marital_status)
 	VALUES	(v_lead_id, new__user_id, new__cpf, new__gender, new__monthly_income, new__birth_date, new__marital_status);
 
-	It is missing add contact_lead
-
 	RETURN 0;
 	
 END;' language 'plpgsql';
@@ -245,46 +333,17 @@ RETURNS integer AS '
 DECLARE
 	p_lead_id	ALIAS FOR $1;
 		
-	row		record;
 BEGIN
 	
-	PERFORM acs_object__delete (p_lead_id);
+	PERFORM cif_loan__delete (null, p_lead_id);
 
-	PERFORM cif_lead_contact__delete (p_lead_id);
+	PERFORM cif_lead_contact__delete (null, p_lead_id);
 	
-	FOR row IN
-		SELECT loan_id FROM cif_loans WHERE lead_id = p_lead_id
-	LOOP
-		PERFORM cif_loan__delete (row.loan_id);
-	END LOOP;
+	PERFORM acs_object__delete (p_lead_id);
 
 	DELETE FROM cif_leads WHERE lead_id = p_lead_id;
 
 	RETURN 0;
 
 END;' language 'plpgsql';
-
-CREATE OR REPLACE FUNCTION inline_0 ()
-RETURNS integer AS '
-DECLARE 
-BEGIN
-	PERFORM acs_object_type__create_type (
-		''lead'',		-- object_type
-		''Lead'',		-- pretty_name
-		''Leads'',		-- pretty_plural
-		''acs_object'', 	-- supertype
-		''cif_leads'',		-- table_name
-		''lead_id'',		-- id_column
-		''leading-management,	-- package_name
-		''f'',			-- abstract_p
-		null,			-- type_extension_table
-		null			-- name_method
-	);
-
-	RETURN 0;
-
-END;' language 'plpgsql';
-
-SELECT inline_0 ();
-DROP FUNCTION inline_0 ();
 
