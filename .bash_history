@@ -31,3 +31,6 @@ emacs packages/ref-br-ibge/sql/postgresql/ref-br-ibge-create.sql
 exit
 /usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200 -t /etc/aolserver4/cif.tcl 
 emacs packages/acs-kernel/sql/postgresql/community-core-create.sql 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200 -t /etc/aolserver4/cif.tcl 
+emacs packages/lead-management/tcl/lead-management-procs.tcl
+exit
