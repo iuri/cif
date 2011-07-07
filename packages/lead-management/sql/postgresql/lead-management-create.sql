@@ -280,7 +280,7 @@ DECLARE
 	new__state_abbrev	ALIAS FOR $7;
 	new__municipality	ALIAS FOR $8;
 	new__country_code	ALIAS FOR $9;
-	new__email2		ALIAS FOR $10
+	new__email2		ALIAS FOR $10;
 	new__phone1		ALIAS FOR $11;
 	new__phone_type1	ALIAS FOR $12;
 	new__phone2		ALIAS FOR $13;

@@ -9,9 +9,9 @@ create table br_ibge_municipality (
                     constraint br_ibge_municipality_ibge_code_pk primary key,
     name  	    varchar,
     state_code      char(2),
+    territory_sdt_code	integer,
     lat		    varchar,
-    lng		    varchar,
-    territory_sdt_code	integer
+    lng		    varchar
 );
 
 

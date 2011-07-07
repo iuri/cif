@@ -13,4 +13,4 @@
 <property name="focus">lead-ae.name</property>
 
  
-<formtemplate id="lead-ae"></formtemplate>
+<formtemplate id="lead"></formtemplate>

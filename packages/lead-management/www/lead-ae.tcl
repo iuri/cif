@@ -6,6 +6,8 @@ ad_page_contract {
 } {
     { action "add"}
     {return_url ""}
+    {property_state ""}
+    {state ""}
 }
 
 set package_id [ad_conn package_id]
@@ -13,10 +15,34 @@ set user_id [ad_conn user_id]
 
 set admin_p [permission::permission_p -party_id $user_id -object_id $package_id -privilege "admin"]
 
-set municipality_options ""
-set state_options [db_list_of_lists select_states { SELECT abbrev, state_name FROM br_states }]
+set where_clause1 ""
+if {[exists_and_not_null property_state]} {
+    set where_clause1 "WHERE state_code = :property_state"
+}
 
-ad_form -name lead-ae -cancel_url $return_url -form {
+set where_clause2 ""
+if {[exists_and_not_null state]} {
+    set where_clause2 "WHERE state_code = :state"
+}
+
+
+set property_municipality_options [db_list_of_lists select_municipality "
+    SELECT name, ibge_code FROM br_ibge_municipality $where_clause1 ORDER BY name
+"]
+
+set property_state_options [db_list_of_lists select_states { SELECT state_name, abbrev FROM br_states }]
+
+
+set municipality_options [db_list_of_lists select_municipality "
+    SELECT name, ibge_code FROM br_ibge_municipality $where_clause2 ORDER BY name
+"]
+
+set state_options [db_list_of_lists select_states { SELECT state_name, abbrev FROM br_states }]
+
+
+ns_log Notice "$state_options"
+
+ad_form -name lead -cancel_url $return_url -form {
     {lead_id:key}
     {inform1:text(inform)
 	{label "<h2>[_ lead-management.Lead_Profile]</h2>"}
@@ -56,7 +82,7 @@ ad_form -name lead-ae -cancel_url $return_url -form {
 
 set category_ids [list]
 foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
-    ad_form -extend -name lead-ae -form [list \
+    ad_form -extend -name lead -form [list \
 					     [list "cat_${category_id}:integer(select)" \
 						  [list label "${category_name}"] \
 						  [list options [lead_management::category_get_options -parent_id $category_id]] \
@@ -66,18 +92,19 @@ foreach {category_id category_name} [lead_management::get_categories -package_id
 }
 
     
-ad_form -extend -name lead-ae -form {
+ad_form -extend -name lead -form {
     {property_type:text(select)
 	{label "[_ lead-management.Property_Type]"}
 	{options {{rent 0} {own 1}}}
     }
-    {property_municipality:text(select)
-	{label "[_ lead-management.Property_Municipality]"}
-	{options $municipality_options}
-    }	
     {property_state:text(select)
 	{label "[_ lead-management.Property_State]"}
-	{options $state_options}
+	{options {$property_state_options}}
+	{html {onChange "document.lead.__refreshing_p.value='1';document.lead.submit()"}}
+    }	
+    {property_municipality:text(select)
+	{label "[_ lead-management.Property_Municipality]"}
+	{options {$property_municipality_options}}
     }	
     {owner_p:text(select)
 	{label "[_ lead-management.Owner]"}
@@ -116,13 +143,14 @@ ad_form -extend -name lead-ae -form {
     {address2:text(text)
 	{label "[_ lead-management.Address]"}
     }
-    {municipality:text(select)
-	{label "[_ lead-management.Municipality]"}
-	{options $municipality_options}
-    }	
     {state:text(select)
 	{label "[_ lead-management.State]"}
-	{options $state_options}
+	{options {$state_options}}
+	{html {onChange "document.lead.__refreshing_p.value='1';document.lead.submit()"}}
+    }	 
+    {municipality:text(select)
+	{label "[_ lead-management.Municipality]"}
+	{options {$municipality_options}}
     }	
     {note:text(textarea)
 	{label "[_ lead-management.Note]"}
