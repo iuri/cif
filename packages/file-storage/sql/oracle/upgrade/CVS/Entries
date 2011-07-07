@@ -1,0 +1,21 @@
+/upgrade-4.2-4.6.sql/1.2/Sat Nov 30 17:34:09 2002//
+/upgrade-4.6.1-4.6.2.sql/1.3/Thu May 26 08:28:45 2005//
+/upgrade-4.6.2-4.6.3.sql/1.2/Thu Aug 28 09:41:53 2003//
+/upgrade-4.6.2-4.7d3.sql/1.2/Mon Dec  1 14:36:44 2003//
+/upgrade-5.1.0a11-5.1.0a12.sql/1.2/Thu Jan 13 13:58:10 2005//
+/upgrade-5.1.0a12-5.1.0a13.sql/1.2/Thu Jan 13 13:58:10 2005//
+/upgrade-5.1.0a13-5.1.0a14.sql/1.4/Thu May 26 08:28:45 2005//
+/upgrade-5.1.0a2-5.1.0a3.sql/1.3/Tue Aug  8 21:26:48 2006//
+/upgrade-5.1.0a4-5.1.0a5.sql/1.4/Tue Aug  8 21:26:48 2006//
+/upgrade-5.1.0a6-5.1.0a7.sql/1.3/Thu Feb 24 13:33:18 2005//
+/upgrade-5.1.0a8-5.1.0a9.sql/1.2/Thu Jan 13 13:58:10 2005//
+/upgrade-5.1.0d1-5.1.0d2.sql/1.5/Tue Aug  8 21:26:48 2006//
+/upgrade-5.1.0d3-5.1.0d4.sql/1.5/Thu May 26 08:28:45 2005//
+/upgrade-5.2.0d5-5.2.0d6.sql/1.2/Tue Aug  8 21:26:48 2006//
+/upgrade-5.2.0d8-5.2.2.sql/1.2/Tue Aug  8 21:26:48 2006//
+/upgrade-5.2.3d1-5.2.3d2.sql/1.2/Tue Aug  8 21:26:48 2006//
+/upgrade-5.2.3d2-5.2.3.sql/1.2/Tue Aug  8 21:26:48 2006//
+/upgrade-5.4.0d1-5.4.0d2.sql/1.2/Mon Dec 10 09:53:41 2007//
+/upgrade-5.5.0d1-5.5.0d2.sql/1.1/Thu Jan 29 14:31:57 2009//
+/upgrade-5.6.0d1-5.6.0d2.sql/1.1/Mon Oct 12 22:46:16 2009//
+D

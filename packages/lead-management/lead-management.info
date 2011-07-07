@@ -16,7 +16,10 @@
         <maturity>0</maturity>
 
         <provides url="lead-management" version="0.1d"/>
-
+        <requires url="ref-br-states" version="0.1d"/>
+        <requires url="ref-br-ibge" version="0.5d"/>
+        <requires url="categories" version="1.1.2d5"/>
+	
         <callbacks>
         </callbacks>
         <parameters>
