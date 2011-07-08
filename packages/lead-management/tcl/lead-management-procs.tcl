@@ -8,11 +8,99 @@ ad_library {
 
 
 namespace eval lead_management {}
-namespace eval lead  {}
+namespace eval lead_management::lead  {}
+namespace eval lead_management::loan {}
 
+ad_proc -public lead_management::loan::new {
+    -lead_id:required
+    -financed_amount
+    -property_state
+    -property_municipality
+    -owner_p
+} { 
 
+    Adds new loan associated with lead_id
 
+    @author Iuri Sampaio (iuri.sampaio@iurix.com)
+    @creation-date 2011-07-07
 
+} {
+
+    db_exec_plsql insert_loan {
+	SELECT lm_loan__new (
+			     null,
+			     :lead_id,
+			     :financed_amount,
+			     :property_state,
+			     :property_municipality,
+			     :owner_p
+			     );
+    }
+
+    
+    return
+}
+
+ad_proc -public lead_management::lead::new {
+    -user_id:required
+    -cpf
+    -gender
+    -monthly_income
+    -birth_date
+    -marital_status 
+    -contact_time
+    -email
+    -phone1
+    -phone_type1
+    -phone2
+    -phone_type2
+    -postal_code
+    -address
+    -address2
+    -state
+    -municipality
+    -note
+} { 
+    Adds new lead and contact info
+
+    @author Iuri Sampaio (iuri.sampaio@iurix.com)
+    @creation-date 2011-07-07
+
+} {
+
+    db_exec_plsql insert_lead {
+	SELECT lm_lead__new (
+			     null,
+			     :user_id,
+			     :cpf,
+			     :gender,
+			     :monthly_income,
+			     :birth_date,
+			     :marital_status 
+			     );
+    }
+
+    db_exec_plsql insert_contact_info {
+	SELECT lm_lead_contact__new (
+				     null,
+				     :contact_time,
+				     :email,
+				     :phone1,
+				     :phone_type1,
+				     :phone2,
+				     :phone_type2,
+				     :postal_code,
+				     :address,
+				     :address2,
+				     :state,
+				     :municipality,
+				     :note
+				     );
+    }
+
+    return $lead_id
+}
+    
 
 ad_proc -public lead_management::get_categories {
     {-package_id ""}

@@ -45,7 +45,8 @@ ns_log Notice "$state_options"
 ad_form -name lead -cancel_url $return_url -form {
     {lead_id:key}
     {inform1:text(inform)
-	{label "<h2>[_ lead-management.Lead_Profile]</h2>"}
+	{label ""}
+	{value "<h2>[_ lead-management.Lead_Profile]</h2>"}
     }
     {name:text(text)
 	{label "[_ lead-management.Name]"}
@@ -72,7 +73,8 @@ ad_form -name lead -cancel_url $return_url -form {
 	{options {{Single s} {Married m}}}
     }
     {inform2:text(inform)
-	{label "<h2>[_ lead-management.Loan_Profile]</h2>"}
+	{label ""}
+	{value "<h2>[_ lead-management.Loan_Profile]</h2>"}
     }
     {financed_amount:text(inform)
 	{label "[_ lead-management.Financed_Amount]"}
@@ -83,7 +85,7 @@ ad_form -name lead -cancel_url $return_url -form {
 set category_ids [list]
 foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
     ad_form -extend -name lead -form [list \
-					     [list "cat_${category_id}:integer(select)" \
+					     [list "cat_${category_id}:text(select)" \
 						  [list label "${category_name}"] \
 						  [list options [lead_management::category_get_options -parent_id $category_id]] \
 						  [list value   ""] \
@@ -93,10 +95,6 @@ foreach {category_id category_name} [lead_management::get_categories -package_id
 
     
 ad_form -extend -name lead -form {
-    {property_type:text(select)
-	{label "[_ lead-management.Property_Type]"}
-	{options {{rent 0} {own 1}}}
-    }
     {property_state:text(select)
 	{label "[_ lead-management.Property_State]"}
 	{options {$property_state_options}}
@@ -111,10 +109,20 @@ ad_form -extend -name lead -form {
 	{options {{Yes 1} {No 0}}}
     }
     {inform3:text(inform)
-	{label "<h2>[_ lead-management.Contact_Info]</h2>"}
+	{label ""}
+	{value "<h2>[_ lead-management.Contact_Info]</h2>"}
     }
-    {contact_time:text(text)
-	{label "[_ lead-management.Contact_Time]"}
+
+    {inform4:text(inform)
+	{label "<h4>[_ lead-management.Contact_Time]</h4>"}
+    }
+    {start_time:date,optional
+        {label "[_ lead-management.Start_Time]"}
+        {format {[lc_get formbuilder_time_format]}}
+    }
+    {end_time:date,optional
+        {label "[_ lead-management.End_Time]"}
+        {format {[lc_get formbuilder_time_format]}}
     }
     {email:email
 	{label "[_ lead-management.Email]"}
@@ -123,16 +131,18 @@ ad_form -extend -name lead -form {
 	{label "[_ lead-management.Alternative_Email]"}
     }
     {phone1:text(text)
-	{label "[_ lead-management.Phone]"}
+	{label "[_ lead-management.Phone1]"}
     }
-    {phone_type1:text(text)
-	{label "[_ lead-management.Phone]"}
+    {phone_type1:text(select)
+	{label "[_ lead-management.Phone_Type1]"}
+	{options {{Home home} {Mobile mobile} {Work work}}}
     }
     {phone2:text(text)
-	{label "[_ lead-management.Phone]"}
+	{label "[_ lead-management.Phone2]"}
     }
-    {phone_type2:text(text)
-	{label "[_ lead-management.Phone]"}
+    {phone_type2:text(select)
+	{label "[_ lead-management.Phone_Type2]"}
+	{options {{Home home} {Mobile mobile} {Work work}}}
     }
     {postal_code:text(text)
 	{label "[_ lead-management.Postal_Code]"}
@@ -154,23 +164,79 @@ ad_form -extend -name lead -form {
     }	
     {note:text(textarea)
 	{label "[_ lead-management.Note]"}
+	{html {cols 50 rows 15}}
     }
+} -validate {
+    {email
+        {[string equal "" [party::get_by_email -email $email]]}
+        "[_ acs-subsite.Email_already_exists]"
+    }
+    
 } -on_submit {
 
 } -new_data {
-
-
-
-
-
-    foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
-	category::map_object -remove_old -object_id $lead_id ""
-    }
-    foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
-        ns_log Notice " TTT [set cat_${category_id}]"
-	set child_id  [set cat_${category_id}]
-	category::map_object -object_id $lead_id $child_id
+    
+    
+    #add user
+    db_transaction {
+	# Pre-generate user_id for double-click protection
+	set user_id [db_nextval acs_object_id_seq]
 	
+	for {set i 0} {$i < [expr [llength $name] -1]} {incr i} {
+	    lappend first_names [lindex $name $i]
+	}
+
+	set last_name [lindex $name [expr [llength $name] - 1]]
+	
+	array set creation_info [auth::create_user \
+                                     -user_id $user_id \
+                                     -email $email \
+                                     -first_names $first_names \
+                                     -last_name $last_name \
+                                    ]
+	
+        lead_management::lead::new \
+	    -user_id $user_id \
+	    -cpf $cpf \
+	    -gender $gender \
+	    -monthly_income $monthly_income \
+	    -birth_date $birth_date \
+	    -marital_status $marital_status \
+	    -contact_time "$start_time - $end_time" \
+	    -email $email2 \
+	    -phone1 $phone1 \
+	    -phone_type1 $phone_type1 \
+	    -phone2 $phone2 \
+	    -phone_type2 $phone_type2 \
+	    -postal_code $postal_code \
+	    -address $address \
+	    -address2 $address2 \
+	    -state $state \
+	    -municipality $municipality \
+	    -note $note
+
+	lead_management::loan::new \
+	    -lead_id $user_id \
+	    -financed_amount $financed_amount \
+	    -property_state $property_state \
+	    -property_municipality $property_municipality \
+	    -owner_p $owner_p
+	    
+	
+
+	foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
+	    category::map_object -remove_old -object_id $user_id ""
+	}
+	foreach {category_id category_name} [lead_management::get_categories -package_id $package_id] {
+	    ns_log Notice " TTT [set cat_${category_id}]"
+	    set child_id  [set cat_${category_id}]
+	    category::map_object -object_id $user_id $child_id
+	    
+	}
+	
+    } on_error {
+	ad_return_complaint 1 "[_ lead-management.Error_add_lead] <pre>$errmsg</pre>"
+	ad_script_abort
     }
 } -after_submit {
     ad_returnredirect $return_url

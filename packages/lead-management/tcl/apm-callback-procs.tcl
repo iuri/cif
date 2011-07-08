@@ -43,7 +43,7 @@ ad_proc -private lead_management::install::after_mount {
     #create category tree
     set tree_id [category_tree::add -name "Lead Management"]
     
-    set parent_id [category::add -tree_id $tree_id -parent_id [db_null] -name "Properties" -description "Types of Properties"]
+    set parent_id [category::add -tree_id $tree_id -parent_id [db_null] -name "Type of Property" -description "Types of Property"]
     category::add -tree_id $tree_id -parent_id $parent_id -name "Residencial Usado" -description "Residencial Usado"
     
     db_1row select_object_id {

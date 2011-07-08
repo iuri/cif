@@ -266,7 +266,7 @@ CREATE INDEX lm_lead_contacts_state_abbrev_ix ON lm_lead_contacts(state_abbrev);
 CREATE INDEX lm_lead_contacts_municipality_ix ON lm_lead_contacts(municipality);
 CREATE INDEX lm_lead_contacts_lead_id_ix ON lm_lead_contacts(lead_id);
 
-SELECT define_function_args ('lm_lead_contact__new', 'contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, phone1, phone_type1, phone2, phone_type2, additional_text');
+SELECT define_function_args ('lm_lead_contact__new', 'contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, email2, phone1, phone_type1, phone2, phone_type2, additional_text');
 
 CREATE OR REPLACE FUNCTION lm_lead_contact__new (integer, integer, varchar, varchar, varchar, varchar, char, varchar, char, varchar, varchar, varchar, varchar, varchar, varchar)
 RETURNS integer AS '
