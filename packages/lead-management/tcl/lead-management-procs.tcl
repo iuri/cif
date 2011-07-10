@@ -26,7 +26,7 @@ ad_proc -public lead_management::loan::new {
 
 } {
 
-    db_exec_plsql insert_loan {
+    return [db_exec_plsql insert_loan {
 	SELECT lm_loan__new (
 			     null,
 			     :lead_id,
@@ -35,10 +35,7 @@ ad_proc -public lead_management::loan::new {
 			     :property_municipality,
 			     :owner_p
 			     );
-    }
-
-    
-    return
+    }]
 }
 
 ad_proc -public lead_management::lead::new {
@@ -59,6 +56,7 @@ ad_proc -public lead_management::lead::new {
     -address2
     -state
     -municipality
+    -country
     -note
 } { 
     Adds new lead and contact info
@@ -68,7 +66,7 @@ ad_proc -public lead_management::lead::new {
 
 } {
 
-    db_exec_plsql insert_lead {
+    set lead_id [db_exec_plsql insert_lead {
 	SELECT lm_lead__new (
 			     null,
 			     :user_id,
@@ -78,22 +76,24 @@ ad_proc -public lead_management::lead::new {
 			     :birth_date,
 			     :marital_status 
 			     );
-    }
+    }]
 
     db_exec_plsql insert_contact_info {
 	SELECT lm_lead_contact__new (
 				     null,
+				     :lead_id,
 				     :contact_time,
+				     :address,
+				     :address2,
+				     :postal_code,
+				     :state,
+				     :municipality,
+				     :country,
 				     :email,
 				     :phone1,
 				     :phone_type1,
 				     :phone2,
 				     :phone_type2,
-				     :postal_code,
-				     :address,
-				     :address2,
-				     :state,
-				     :municipality,
 				     :note
 				     );
     }

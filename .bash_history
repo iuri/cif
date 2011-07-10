@@ -286,3 +286,150 @@ createdb -E UNICODE -T template0 cif
 psql -f database-backup/cif-2011-07-05-21-50.dmp cif
 /usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
 tail -f /var/log/aolserver4/cif/error.log 
+pwd
+ls packages/lead-management/
+ps -ef
+kill -9 836
+dropdb cif
+createdb -E UNICODE -T template0 cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+createlang plpgsql cif
+ps -ef
+kill -9 956
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+su - iuri
+su - iuri
+emacs packages/lead-management/www/lead-ae.tcl 
+psql cif
+emacs packages/lead-management/www/lead-ae.tcl 
+fg 1
+emacs packages/lead-management/www/lead-ae.tcl 
+psql cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+ps -ef
+kill -9 4260
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+fg 1
+fg 1
+emacs packages/lead-management/www/lead-ae.tcl 
+exit
+git pull origin master
+git status
+rm -rf .bash_history 
+rm packages/acs-kernel/sql/postgresql/#community-core-create.sql# 
+git pull origin master]
+git pull origin master
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+emacs /etc/aolserver4/cif.tcl 
+ps -ef
+kill -9 3520
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200 -t /etc/aolserver4/cif.tcl 
+ps -ef
+kill -9 3578
+usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8000 -t /etc/aolserver4/cif.tcl 
+emacs /etc/aolserver4/cif.tcl 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+emacs packages/ref-br-states/sql/common/br-states.dat 
+psql cif
+tail -f /var/log/aolserver4/cif/error.log 
+emacs packages/calendar/tcl/calendar-procs.tcl 
+emacs packages/calendar/tcl/calendar-procs.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+mkdir packages/lead-management/sql/postgresql/upgrad
+emacs packages/lead-management/lead-management.info 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+fg 1
+tail -f /var/log/aolserver4/cif/error.log 
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+fg 1
+ps -ef
+kill -9 4279
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+su - iuri
+exit
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+psql cif
+mv packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d-0.1d2.sql packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d1-0.1d2.sql
+emacs packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d1-0.1d2.sql
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d1-0.1d2.sql
+cd packages/lead-management/sql/postgresql/upgrade/
+ls
+mv upgrade-0.1d1-0.1d2.sql upgrade-0.1d2-0.1d3.sql
+emacs upgrade-0.1d1-0.1d2.sql~ 
+emacs upgrade-0.1d-0.1d2.sql~ 
+rm *~
+ls
+psql -f upgrade-0.1d1-0.1d2.sql 
+psql cif
+emacs upgrade-0.1d2-0.1d3.sql 
+psql cif
+cd ..
+cd ..
+cd ..
+cd ..
+cd ..
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/lead-management.in
+emacs packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d4-0.1d5.sql 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d7-0.1d8.sql 
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+psql cif
+emacs packages/lead-management/sql/postgresql/lead-management-create.sql 
+emacs packages/lead-management/lead-management.info 
+emacs packages/lead-management/tcl/lead-management-procs.tcl 
+su - iuri
+exit
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+ps -ef
+ps -ef
+kill -9 848
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+psql cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+psql cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+ps -ef
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log 
+ps -ef
+psql cif
+tail -f /var/log/aolserver4/cif/error.log 
+psql cif
+tail -f /var/log/aolserver4/cif/error.log 

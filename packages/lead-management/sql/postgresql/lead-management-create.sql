@@ -24,7 +24,7 @@ CREATE TABLE lm_leads (
 			CONSTRAINT lm_leads_cpf_un
 			unique,
 	gender		char,
-	montlhy_income	varchar(50),
+	monthly_income	varchar(50),
 	birth_date	timestamp,
 	marital_status	varchar(20)	
 );
@@ -73,23 +73,22 @@ DECLARE
 	v_lead_id		lm_leads.lead_id%TYPE;
 
 BEGIN
-
 	v_lead_id := acs_object__new (
-		new__lead_id,		-- object_id
-		''lm_lead'', 		-- object_type
-		now(),			-- creation_date
-		0,			-- creation_user
-		null,			-- creation_ip
-		null,			-- context_id
-		''t'',			-- security_inherit_p
-		null,			-- title
-		null			-- package_id 
+		  new__lead_id,		-- object_id
+		  ''lm_lead'', 		-- object_type
+		  now(),		-- creation_date
+		  0,			-- creation_user
+		  null,			-- creation_ip
+		  null,			-- context_id
+		  ''t'',		-- security_inherit_p
+		  null,			-- title
+		  null			-- package_id 
 	);
 
 	INSERT INTO lm_leads (lead_id, user_id, cpf, gender, monthly_income, birth_date, marital_status)
 	VALUES	(v_lead_id, new__user_id, new__cpf, new__gender, new__monthly_income, new__birth_date, new__marital_status);
 
-	RETURN 0;
+	RETURN v_lead_id;
 	
 END;' language 'plpgsql';
 
@@ -160,21 +159,22 @@ BEGIN
 
 END;' language 'plpgsql';
 
--- SELECT inline_0 ();
+SELECT inline_0 ();
 DROP FUNCTION inline_0 ();
 
 
 -- Create plsql functions for loans
-SELECT define_function_args ('lm_loan__new', 'loan_id, lead_id, property_state, poroperty_municipality, owner_p;f');
+SELECT define_function_args ('lm_loan__new', 'loan_id, lead_id, financed_amount, property_state, poroperty_municipality, owner_p;f');
 				
-CREATE OR REPLACE FUNCTION lm_loan__new (integer, integer, varchar, int4, boolean)
+CREATE OR REPLACE FUNCTION lm_loan__new (integer, integer, varchar, varchar, int4, boolean)
 RETURNS integer AS '
 DECLARE
 	new__loan_id			ALIAS FOR $1;	-- default null
 	new__lead_id			ALIAS FOR $2;
-	new__property_state		ALIAS FOR $3;
-	new__property_municipality	ALIAS FOR $4;
-	new__owner_p			ALIAS FOR $5;
+	new__financed_amount		ALIAS FOR $3;
+	new__property_state		ALIAS FOR $4;
+	new__property_municipality	ALIAS FOR $5;
+	new__owner_p			ALIAS FOR $6;
 
 	v_loan_id			lm_loans.loan_id%TYPE;
 BEGIN
@@ -191,12 +191,13 @@ BEGIN
 		null			-- package_id 
 	);		
 
-	INSERT INTO lm_loans (loan_id, lead_id, property_state, property_municipality, owner_p) 
-	VALUES (v_loan_id, new__lead_id, new__property_state, new__property_municipality, new__owner_p);
+	INSERT INTO lm_loans (loan_id, lead_id, financed_amount, property_state, property_municipality, owner_p) 
+	VALUES (v_loan_id, new__lead_id, new__financed_amount, new__property_state, new__property_municipality, new__owner_p);
 
-	RETURN 0;
+	RETURN v_loan_id;
 
 END;' language 'plpgsql';
+
 
 SELECT define_function_args ('lm_loan__delete', 'loan_id, lead_id');
 
@@ -244,16 +245,17 @@ CREATE TABLE lm_lead_contacts (
 				REFERENCES lm_leads (lead_id),
 	contact_time		varchar(200),
 	postal_address		varchar(1000),
-	number			varchar(10),
+	postal_address2		varchar(1000),
 	postal_code		varchar(50),
-	state_abbrev		char(2)
+	state_abbrev		varchar(2)
 				CONSTRAINT lm_lead_contacts_state_abbrev_fk
 				REFERENCES br_states (abbrev),
 	municipality		varchar(100),
-	country_code    	char(2)
+	country_code    	varchar(2)
                         	CONSTRAINT lm_lead_contacts_country_code_fk
                         	REFERENCES countries (iso)
                         	not null,
+	email			varchar(50),
 	phone1			varchar(20),
 	phone_type1		varchar(20),
 	phone2			varchar(20),
@@ -266,16 +268,16 @@ CREATE INDEX lm_lead_contacts_state_abbrev_ix ON lm_lead_contacts(state_abbrev);
 CREATE INDEX lm_lead_contacts_municipality_ix ON lm_lead_contacts(municipality);
 CREATE INDEX lm_lead_contacts_lead_id_ix ON lm_lead_contacts(lead_id);
 
-SELECT define_function_args ('lm_lead_contact__new', 'contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, email2, phone1, phone_type1, phone2, phone_type2, additional_text');
+SELECT define_function_args ('lm_lead_contact__new', 'contact_id, lead_id, contact_time, postal_address, postal_address2, postal_code, state_abbrev, municipality, country_code, email, phone1, phone_type1, phone2, phone_type2, additional_text');
 
-CREATE OR REPLACE FUNCTION lm_lead_contact__new (integer, integer, varchar, varchar, varchar, varchar, char, varchar, char, varchar, varchar, varchar, varchar, varchar, varchar)
+CREATE OR REPLACE FUNCTION lm_lead_contact__new (integer, integer, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar, varchar)
 RETURNS integer AS '
 DECLARE
 	new__contact_id		ALIAS FOR $1;
 	new__lead_id		ALIAS FOR $2;
 	new__contact_time	ALIAS FOR $3;
 	new__postal_address	ALIAS FOR $4;
-	new__number		ALIAS FOR $5;
+	new__postal_address2	ALIAS FOR $5;
 	new__postal_code	ALIAS FOR $6;
 	new__state_abbrev	ALIAS FOR $7;
 	new__municipality	ALIAS FOR $8;
@@ -287,13 +289,21 @@ DECLARE
 	new__phone_type2	ALIAS FOR $14;
 	new__additional_text	ALIAS FOR $15;
 
+	v_contact_id		lm_lead_contacts.contact_id%TYPE;
 BEGIN
 
-	INSERT INTO lm_lead_contacts (contact_id, lead_id, contact_time, postal_address, number, postal_code, state_abbrev, municipality, country_code, email2, phone1, phone_type1, phone2, phone_type2, additional_text) VALUES (new__contact_id, new__lead_id, new__contact_time, new__postal_address, new__number, new__postal_code, new__state_abbrev, new__municipality, new__country_code, new__email2, new__phone1, new__phone_type1, new__phone2, new__phone_type2, new__additional_text);
+	IF new__contact_id IS NULL THEN
+	   SELECT nextval(''t_acs_object_id_seq'') INTO v_contact_id;
+	ELSE 
+	   v_contact_id := new__contact_id;
+	END IF;
+
+	INSERT INTO lm_lead_contacts (contact_id, lead_id, contact_time, postal_address, postal_address2, postal_code, state_abbrev, municipality, country_code, email2, phone1, phone_type1, phone2, phone_type2, additional_text) VALUES (v_contact_id, new__lead_id, new__contact_time, new__postal_address, new__postal_address2, new__postal_code, new__state_abbrev, new__municipality, new__country_code, new__email2, new__phone1, new__phone_type1, new__phone2, new__phone_type2, new__additional_text);
 
 	RETURN 0;
 	
 END;' language 'plpgsql';
+
 
 SELECT define_function_args ('lm_lead_contact__delete', 'contact_id, lead_id');
 

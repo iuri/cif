@@ -76,7 +76,7 @@ ad_form -name lead -cancel_url $return_url -form {
 	{label ""}
 	{value "<h2>[_ lead-management.Loan_Profile]</h2>"}
     }
-    {financed_amount:text(inform)
+    {financed_amount:text(text)
 	{label "[_ lead-management.Financed_Amount]"}
     }
 }
@@ -144,14 +144,14 @@ ad_form -extend -name lead -form {
 	{label "[_ lead-management.Phone_Type2]"}
 	{options {{Home home} {Mobile mobile} {Work work}}}
     }
-    {postal_code:text(text)
-	{label "[_ lead-management.Postal_Code]"}
-    }
     {address:text(text)
 	{label "[_ lead-management.Address]"}
     }
     {address2:text(text)
 	{label "[_ lead-management.Address]"}
+    }
+    {postal_code:text(text)
+	{label "[_ lead-management.Postal_Code]"}
     }
     {state:text(select)
 	{label "[_ lead-management.State]"}
@@ -175,8 +175,24 @@ ad_form -extend -name lead -form {
 } -on_submit {
 
 } -new_data {
+
     
-    
+    set year [template::util::date::get_property year $birth_date]
+    set month [template::util::date::get_property month $birth_date]
+    set day [template::util::date::get_property day $birth_date]
+
+    set birth_date "$year-$month-$day"
+    ns_log Notice "DATE $birth_date"
+
+    set hour [template::util::date::get_property hours $start_time]
+    set minutes [template::util::date::get_property minutes $start_time]
+    set start_time "$hour-$minutes"
+
+    set hour [template::util::date::get_property hours $end_time]
+    set minutes [template::util::date::get_property minutes $end_time]
+    set end_time "$hour-$minutes"
+
+    set contact_time "$start_time - $end_time"
     #add user
     db_transaction {
 	# Pre-generate user_id for double-click protection
@@ -195,28 +211,29 @@ ad_form -extend -name lead -form {
                                      -last_name $last_name \
                                     ]
 	
-        lead_management::lead::new \
-	    -user_id $user_id \
-	    -cpf $cpf \
-	    -gender $gender \
-	    -monthly_income $monthly_income \
-	    -birth_date $birth_date \
-	    -marital_status $marital_status \
-	    -contact_time "$start_time - $end_time" \
-	    -email $email2 \
-	    -phone1 $phone1 \
-	    -phone_type1 $phone_type1 \
-	    -phone2 $phone2 \
-	    -phone_type2 $phone_type2 \
-	    -postal_code $postal_code \
-	    -address $address \
-	    -address2 $address2 \
-	    -state $state \
-	    -municipality $municipality \
-	    -note $note
-
+        set lead_id [lead_management::lead::new \
+			 -user_id $user_id \
+			 -cpf $cpf \
+			 -gender $gender \
+			 -monthly_income $monthly_income \
+			 -birth_date $birth_date \
+			 -marital_status $marital_status \
+			 -contact_time $contact_time \
+			 -email $email2 \
+			 -phone1 $phone1 \
+			 -phone_type1 $phone_type1 \
+			 -phone2 $phone2 \
+			 -phone_type2 $phone_type2 \
+			 -postal_code $postal_code \
+			 -address $address \
+			 -address2 $address2 \
+			 -country "BR" \
+			 -state $state \
+			 -municipality $municipality \
+			 -note $note]
+	
 	lead_management::loan::new \
-	    -lead_id $user_id \
+	    -lead_id $lead_id \
 	    -financed_amount $financed_amount \
 	    -property_state $property_state \
 	    -property_municipality $property_municipality \

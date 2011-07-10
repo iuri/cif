@@ -1,0 +1,5 @@
+-- /packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d2-0.1d3.sql
+
+SELECT acs_log__debug ('/packages/lead-management/sql/postgresql/upgrade/upgrade-0.1d2-0.1d3.sql', '');
+
+ALTER TABLE lm_lead_contacts ADD COLUMN email2 varchar(100);
