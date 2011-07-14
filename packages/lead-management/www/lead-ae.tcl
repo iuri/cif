@@ -4,12 +4,13 @@ ad_page_contract {
     @author Iuri Sampaio (iuri.sampaio@iurix.com)
     @creation-date 2011-07-06
 } {
+    {lead_id:integer,optional}
     { action "add"}
     {return_url ""}
     {property_state ""}
     {state ""}
 }
-
+ns_log Notice "LEADID $lead_id"
 set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 
@@ -173,6 +174,21 @@ ad_form -extend -name lead -form {
     }
     
 } -on_submit {
+
+} -edit_request {
+    db_1row select_lead {
+	SELECT u.first_names || ' ' || u.last_name AS name,
+	ll.cpf, ll.gender, ll.monthly_income, ll.birth_date, ll.marital_status,
+	lo.financed_amount, lo.property_state, lo.property_municipality, lo.owner_p
+	FROM cc_users u, lm_leads ll, lm_loans lo
+	WHERE u.user_id = ll.user_id
+	AND ll.lead_id = lo.lead_id
+	AND ll.lead_id = :lead_id
+	
+    }
+
+    set birth_date [lead_management::from_sql_datetime -sql_date $birth_date  -format "YYY-MM-DD"]
+
 
 } -new_data {
 

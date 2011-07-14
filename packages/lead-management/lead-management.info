@@ -9,13 +9,13 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>f</inherit-templates-p>
     
-    <version name="0.1d9" url="http://openacs.org/repository/download/apm/lead-management-0.1d9.apm">
+    <version name="0.1d11" url="http://openacs.org/repository/download/apm/lead-management-0.1d11.apm">
         <owner url="mailto:iuri.sampaio@gmail.com">iuri sampaio</owner>
         <summary>CIF Lead Management System</summary>
         <description format="text/html">CIF Lead Management System</description>
         <maturity>0</maturity>
 
-        <provides url="lead-management" version="0.1d9"/>
+        <provides url="lead-management" version="0.1d11"/>
         <requires url="ref-br-states" version="0.1d"/>
         <requires url="ref-br-ibge" version="0.5d"/>
         <requires url="categories" version="1.1.2d5"/>

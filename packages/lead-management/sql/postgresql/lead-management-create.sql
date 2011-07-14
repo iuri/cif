@@ -282,7 +282,7 @@ DECLARE
 	new__state_abbrev	ALIAS FOR $7;
 	new__municipality	ALIAS FOR $8;
 	new__country_code	ALIAS FOR $9;
-	new__email2		ALIAS FOR $10;
+	new__email		ALIAS FOR $10;
 	new__phone1		ALIAS FOR $11;
 	new__phone_type1	ALIAS FOR $12;
 	new__phone2		ALIAS FOR $13;
@@ -298,7 +298,7 @@ BEGIN
 	   v_contact_id := new__contact_id;
 	END IF;
 
-	INSERT INTO lm_lead_contacts (contact_id, lead_id, contact_time, postal_address, postal_address2, postal_code, state_abbrev, municipality, country_code, email2, phone1, phone_type1, phone2, phone_type2, additional_text) VALUES (v_contact_id, new__lead_id, new__contact_time, new__postal_address, new__postal_address2, new__postal_code, new__state_abbrev, new__municipality, new__country_code, new__email2, new__phone1, new__phone_type1, new__phone2, new__phone_type2, new__additional_text);
+	INSERT INTO lm_lead_contacts (contact_id, lead_id, contact_time, postal_address, postal_address2, postal_code, state_abbrev, municipality, country_code, email, phone1, phone_type1, phone2, phone_type2, additional_text) VALUES (v_contact_id, new__lead_id, new__contact_time, new__postal_address, new__postal_address2, new__postal_code, new__state_abbrev, new__municipality, new__country_code, new__email, new__phone1, new__phone_type1, new__phone2, new__phone_type2, new__additional_text);
 
 	RETURN 0;
 	

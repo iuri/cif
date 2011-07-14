@@ -162,3 +162,57 @@ ad_proc lead_management::category_get_options {
     return $children
 }   
 
+
+
+
+
+
+
+ad_proc -public lead_management::from_sql_datetime {
+    {-sql_date:required}
+    {-format:required}
+} {
+    
+} {
+    # for now, we recognize only "YYYY-MM-DD" "HH12:MIam" and "HH24:MI". 
+    set date [template::util::date::create]
+    
+    switch -exact -- $format {
+        {YYYY-MM-DD} {
+            regexp {([0-9]*)-([0-9]*)-([0-9]*)} $sql_date all year month day
+	    
+            set date [template::util::date::set_property format $date {DD MONTH YYYY}]
+            set date [template::util::date::set_property year $date $year]
+            set date [template::util::date::set_property month $date $month]
+            set date [template::util::date::set_property day $date $day]
+        }
+
+        {HH12:MIam} {
+            regexp {([0-9]*):([0-9]*) *([aApP][mM])} $sql_date all hours minutes ampm
+            
+            set date [template::util::date::set_property format $date {HH12:MI am}]
+            set date [template::util::date::set_property hours $date $hours]
+            set date [template::util::date::set_property minutes $date $minutes]                
+            set date [template::util::date::set_property ampm $date [string tolower $ampm]]
+        }
+
+        {HH24:MI} {
+            regexp {([0-9]*):([0-9]*)} $sql_date all hours minutes
+
+            set date [template::util::date::set_property format $date {HH24:MI}]
+            set date [template::util::date::set_property hours $date $hours]
+            set date [template::util::date::set_property minutes $date $minutes]
+        }
+
+        {HH24} {
+            set date [template::util::date::set_property format $date {HH24:MI}]
+            set date [template::util::date::set_property hours $date $sql_date]
+            set date [template::util::date::set_property minutes $date 0]
+        }
+        default {
+            set date [template::util::date::set_property ansi $date $sql_date]
+        }
+    }
+
+    return $date
+}

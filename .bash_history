@@ -433,3 +433,50 @@ psql cif
 tail -f /var/log/aolserver4/cif/error.log 
 psql cif
 tail -f /var/log/aolserver4/cif/error.log 
+git pull origin master
+rm .bash_history 
+git pull origin master
+exit
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 127.0.0.1:8010 -t /etc/aolserver4/cif.tcl 
+ps -ef
+emacs /etc/aolserver4/cif.tcl 
+emacs /var/log/aolserver4/cif/error.log
+emacs packages/lead-management/www/lead-ae.tcl 
+ps -ef
+kill -9 879
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+ps -ef
+tail -f /var/log/aolserver4/cif/error.log
+ps -ef
+tail -f /var/log/aolserver4/cif/error.log
+emacs packages/lead-management/www/lead-ae.tcl 
+exit
+dropdb cif
+createdb -E UNICODE -T template0 cif
+createlang plpgsql cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log
+su - iuri
+tail -f /var/log/aolserver4/cif/error.log
+ps -ef
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log
+psql cif
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log
+emacs packages/acs-subsite/www/members/index.tcl 
+emacs packages/acs-subsite/www/members/index.xql 
+su mda
+su - mda
+emacs packages/acs-subsite/www/members/index.tcl 
+exit
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+tail -f /var/log/aolserver4/cif/error.log
+ps -ef
+kill -9 777
+/usr/lib/aolserver4/bin/nsd-postgres -u cif -s cif -b 192.168.1.200:8020 -t /etc/aolserver4/cif.tcl 
+su - iuri
+exit
